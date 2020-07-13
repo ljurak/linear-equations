@@ -16,8 +16,8 @@ public class Main {
 
         try {
             LinearEquationsSystem equationsSystem = readEquationsSystem(arguments.getInputFile());
-            double[] solution = equationsSystem.solve();
-            writeEquationsSystem(arguments.getOutputFile(), solution);
+            equationsSystem.solve();
+            writeSolution(arguments.getOutputFile(), equationsSystem.getSolution());
         } catch (IOException e) {
             System.out.println("Error occurred when reading/writing file");
         }
@@ -25,12 +25,13 @@ public class Main {
 
     private static LinearEquationsSystem readEquationsSystem(String filename) throws IOException {
         try (Scanner scanner = new Scanner(new File(filename), StandardCharsets.UTF_8)) {
+            int numberOfUnknowns = scanner.nextInt();
             int numberOfEquations = scanner.nextInt();
 
-            LinearEquationsSystem equationsSystem = new LinearEquationsSystem(numberOfEquations);
+            LinearEquationsSystem equationsSystem = new LinearEquationsSystem(numberOfUnknowns, numberOfEquations);
             for (int i = 0; i < numberOfEquations; i++) {
-                LinearEquation equation = new LinearEquation(numberOfEquations);
-                for (int j = 0; j <= numberOfEquations; j++) {
+                LinearEquation equation = new LinearEquation(numberOfUnknowns);
+                for (int j = 0; j <= numberOfUnknowns; j++) {
                     equation.addCoefficient(scanner.nextDouble());
                 }
                 equationsSystem.addEquation(equation);
@@ -40,21 +41,9 @@ public class Main {
         }
     }
 
-    private static void writeEquationsSystem(String filename, double[] solution) throws FileNotFoundException {
+    private static void writeSolution(String filename, String solution) throws FileNotFoundException {
         try (PrintWriter writer = new PrintWriter(filename)) {
-            for (double value : solution) {
-                writer.write(value + System.lineSeparator());
-            }
-        }
-    }
-
-    private static void printEquationsSystem(LinearEquationsSystem equationsSystem) {
-        for (int i = 0; i < equationsSystem.getNumberOfEquations(); i++) {
-            LinearEquation equation = equationsSystem.getEquation(i);
-            for (int j = 0; j <= equation.getUnknownsNumber(); j++) {
-                System.out.print(equation.getCoefficient(j) + " ");
-            }
-            System.out.println();
+            writer.write(solution);
         }
     }
 }
