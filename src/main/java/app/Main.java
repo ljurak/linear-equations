@@ -1,4 +1,7 @@
-package equation;
+package app;
+
+import equation.LinearEquation;
+import equation.LinearEquationsSystem;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,4 +1,4 @@
-package equation;
+package app;
 
 import java.util.Set;
 
