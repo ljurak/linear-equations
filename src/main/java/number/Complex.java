@@ -2,6 +2,12 @@ package number;
 
 public class Complex {
 
+    public static final Complex ZERO = new Complex(0, 0);
+
+    public static final Complex ONE = new Complex(1, 0);
+
+    public static final Complex NEGATIVE_ONE = new Complex(-1, 0);
+
     private final double real;
 
     private final double imaginary;
@@ -40,6 +46,18 @@ public class Complex {
                 (real * other.real + imaginary * other.imaginary) / denominator,
                 (imaginary * other.real - real * other.imaginary) / denominator
         );
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        Complex that = (Complex) other;
+        return real == that.real && imaginary == that.imaginary;
     }
 
     @Override
