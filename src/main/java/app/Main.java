@@ -2,6 +2,7 @@ package app;
 
 import equation.LinearEquation;
 import equation.LinearEquationsSystem;
+import number.ComplexParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,11 +32,12 @@ public class Main {
             int numberOfUnknowns = scanner.nextInt();
             int numberOfEquations = scanner.nextInt();
 
+            ComplexParser parser = new ComplexParser();
             LinearEquationsSystem equationsSystem = new LinearEquationsSystem(numberOfUnknowns, numberOfEquations);
             for (int i = 0; i < numberOfEquations; i++) {
                 LinearEquation equation = new LinearEquation(numberOfUnknowns);
                 for (int j = 0; j <= numberOfUnknowns; j++) {
-                    equation.addCoefficient(scanner.nextDouble());
+                    equation.addCoefficient(parser.parse(scanner.next()));
                 }
                 equationsSystem.addEquation(equation);
             }
