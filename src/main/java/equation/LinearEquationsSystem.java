@@ -1,5 +1,7 @@
 package equation;
 
+import number.Complex;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,39 +55,41 @@ public class LinearEquationsSystem {
             throw new IllegalStateException("Equations system has not been entered correctly");
         }
 
+        printEquationsSystem();
+
         for (int i = 0; i < numberOfUnknowns && i < numberOfEquations; i++) {
             LinearEquation equation = getEquation(i);
 
-            if (equation.getCoefficient(i) == 0) {
+            if (equation.getCoefficient(i).equals(Complex.ZERO)) {
                 int nonZeroRow = findNonZeroRow(i);
                 if (nonZeroRow != -1) {
                     swapEquations(i, nonZeroRow);
                     equation = getEquation(i);
-                    equation.multiplyByScalar(1 / equation.getCoefficient(i));
+                    equation.divideByScalar(equation.getCoefficient(i));
                 } else {
                     int nonZeroColumn = findNonZeroColumn(i);
                     if (nonZeroColumn != -1) {
                         swapColumns(i, nonZeroColumn);
-                        equation.multiplyByScalar(1 / equation.getCoefficient(i));
+                        equation.divideByScalar(equation.getCoefficient(i));
                     } else {
                         RowColumn rowColumn = findNonZeroRowColumn(i);
                         if (rowColumn != null) {
                             swapEquations(i, rowColumn.row);
                             swapColumns(i, rowColumn.col);
                             equation = getEquation(i);
-                            equation.multiplyByScalar(1 / equation.getCoefficient(i));
+                            equation.divideByScalar(equation.getCoefficient(i));
                         } else {
                             break;
                         }
                     }
                 }
-            } else if (equation.getCoefficient(i) != 1) {
-                equation.multiplyByScalar(1 / equation.getCoefficient(i));
+            } else if (!equation.getCoefficient(i).equals(Complex.ONE)) {
+                equation.divideByScalar(equation.getCoefficient(i));
             }
 
             for (int j = i + 1; j < numberOfEquations; j++) {
                 LinearEquation currentEquation = getEquation(j);
-                currentEquation.addEquation(equation, -1 * currentEquation.getCoefficient(i));
+                currentEquation.addEquation(equation, currentEquation.getCoefficient(i).multiply(Complex.NEGATIVE_ONE));
             }
         }
 
@@ -101,7 +105,7 @@ public class LinearEquationsSystem {
 
             for (int j = i - 1; j >= 0; j--) {
                 LinearEquation currentEquation = getEquation(j);
-                currentEquation.addEquation(equation, -1 * currentEquation.getCoefficient(i));
+                currentEquation.addEquation(equation, currentEquation.getCoefficient(i).multiply(Complex.NEGATIVE_ONE));
             }
         }
 
@@ -130,7 +134,7 @@ public class LinearEquationsSystem {
 
     private int findNonZeroRow(int i) {
         for (int m = i + 1; m < numberOfEquations; m++) {
-            if (getEquation(m).getCoefficient(i) != 0) {
+            if (!getEquation(m).getCoefficient(i).equals(Complex.ZERO)) {
                 return m;
             }
         }
@@ -140,7 +144,7 @@ public class LinearEquationsSystem {
     private int findNonZeroColumn(int i) {
         LinearEquation equation = getEquation(i);
         for (int n = i + 1; n < numberOfUnknowns; n++) {
-            if (equation.getCoefficient(n) != 0) {
+            if (!equation.getCoefficient(n).equals(Complex.ZERO)) {
                 return n;
             }
         }
@@ -151,7 +155,7 @@ public class LinearEquationsSystem {
         for (int m = i + 1; m < numberOfEquations; m++) {
             LinearEquation equation = getEquation(m);
             for (int n = i + 1; n < numberOfUnknowns; n++) {
-                if (equation.getCoefficient(n) != 0) {
+                if (!equation.getCoefficient(n).equals(Complex.ZERO)) {
                     return new RowColumn(m, n);
                 }
             }
@@ -177,7 +181,7 @@ public class LinearEquationsSystem {
         for (int i = 0; i < numberOfEquations && i < numberOfUnknowns; i++) {
             LinearEquation equation = getEquation(i);
             for (int j = 0; j < numberOfUnknowns; j++) {
-                if (equation.getCoefficient(j) != 0) {
+                if (!equation.getCoefficient(j).equals(Complex.ZERO)) {
                     significantEquations++;
                     break;
                 }
@@ -188,7 +192,7 @@ public class LinearEquationsSystem {
 
     private boolean checkForContradiction(int significantEquations) {
         for (int i = significantEquations; i < numberOfEquations; i++) {
-            if (getEquation(i).getCoefficient(numberOfUnknowns) != 0) {
+            if (!getEquation(i).getCoefficient(numberOfUnknowns).equals(Complex.ZERO)) {
                 return true;
             }
         }
@@ -196,7 +200,7 @@ public class LinearEquationsSystem {
     }
 
     private String getSingleSolution() {
-        double[] solution = new double[numberOfUnknowns];
+        Complex[] solution = new Complex[numberOfUnknowns];
 
         for (int i = 0; i < numberOfUnknowns; i++) {
             solution[i] = getEquation(i).getCoefficient(numberOfUnknowns);
@@ -205,14 +209,14 @@ public class LinearEquationsSystem {
         if (!columnSwaps.isEmpty()) {
             for (int i = columnSwaps.size() - 1; i >= 0; i--) {
                 ColumnSwap columnSwap = columnSwaps.get(i);
-                double temp = solution[columnSwap.a];
+                Complex temp = solution[columnSwap.a];
                 solution[columnSwap.a] = solution[columnSwap.b];
                 solution[columnSwap.b] = temp;
             }
         }
 
         StringBuilder result = new StringBuilder();
-        for (double variable : solution) {
+        for (Complex variable : solution) {
             result.append(variable).append(System.lineSeparator());
         }
 
@@ -223,7 +227,7 @@ public class LinearEquationsSystem {
         for (int i = 0; i < numberOfEquations; i++) {
             LinearEquation equation = getEquation(i);
             for (int j = 0; j <= equation.getNumberOfUnknowns(); j++) {
-                System.out.printf("%6.2f ", equation.getCoefficient(j));
+                System.out.printf("%s ", equation.getCoefficient(j));
             }
             System.out.println();
         }

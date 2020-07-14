@@ -1,49 +1,57 @@
 package equation;
 
+import number.Complex;
+
 public class LinearEquation {
 
     private final int numberOfUnknowns;
 
-    private final double[] coefficients;
+    private final Complex[] coefficients;
 
     private int currentCoefficient = 0;
 
     public LinearEquation(int numberOfUnknowns) {
         this.numberOfUnknowns = numberOfUnknowns;
-        this.coefficients = new double[numberOfUnknowns + 1];
+        this.coefficients = new Complex[numberOfUnknowns + 1];
     }
 
     public int getNumberOfUnknowns() {
         return numberOfUnknowns;
     }
 
-    public double getCoefficient(int index) {
+    public Complex getCoefficient(int index) {
         if (index < 0 || index > numberOfUnknowns) {
             throw new IndexOutOfBoundsException("Invalid index: " + index);
         }
         return coefficients[index];
     }
 
-    public void addCoefficient(double coefficient) {
+    public void addCoefficient(Complex coefficient) {
         if (currentCoefficient > numberOfUnknowns) {
             throw new IllegalStateException("The equation has already all coefficients entered");
         }
         coefficients[currentCoefficient++] = coefficient;
     }
 
-    public void addEquation(LinearEquation equation, double multiplier) {
+    public void addEquation(LinearEquation equation, Complex multiplier) {
         if (numberOfUnknowns != equation.getNumberOfUnknowns()) {
             throw new IllegalArgumentException("Cannot add equation because of different size");
         }
 
         for (int i = 0; i <= numberOfUnknowns; i++) {
-            coefficients[i] += equation.getCoefficient(i) * multiplier;
+            coefficients[i] = coefficients[i].add(equation.getCoefficient(i).multiply(multiplier));
         }
     }
 
-    public void multiplyByScalar(double multiplier) {
+    public void multiplyByScalar(Complex multiplier) {
         for (int i = 0; i <= numberOfUnknowns; i++) {
-            coefficients[i] *= multiplier;
+            coefficients[i] = coefficients[i].multiply(multiplier);
+        }
+    }
+
+    public void divideByScalar(Complex divider) {
+        for (int i = 0; i <= numberOfUnknowns; i++) {
+            coefficients[i] = coefficients[i].divide(divider);
         }
     }
 
@@ -55,7 +63,7 @@ public class LinearEquation {
             throw new IndexOutOfBoundsException("Invalid column index: " + j);
         }
 
-        double temp = coefficients[i];
+        Complex temp = coefficients[i];
         coefficients[i] = coefficients[j];
         coefficients[j] = temp;
     }
