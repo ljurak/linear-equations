@@ -43,12 +43,6 @@ public class LinearEquation {
         }
     }
 
-    public void multiplyByScalar(Complex multiplier) {
-        for (int i = 0; i <= numberOfUnknowns; i++) {
-            coefficients[i] = coefficients[i].multiply(multiplier);
-        }
-    }
-
     public void divideByScalar(Complex divider) {
         for (int i = 0; i <= numberOfUnknowns; i++) {
             coefficients[i] = coefficients[i].divide(divider);
