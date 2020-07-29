@@ -10,6 +10,8 @@ public class LinearEquation {
 
     private int currentCoefficient = 0;
 
+    private boolean isFullyInitialized = false;
+
     public LinearEquation(int numberOfUnknowns) {
         this.numberOfUnknowns = numberOfUnknowns;
         this.coefficients = new Complex[numberOfUnknowns + 1];
@@ -17,6 +19,10 @@ public class LinearEquation {
 
     public int getNumberOfUnknowns() {
         return numberOfUnknowns;
+    }
+
+    public boolean isFullyInitialized() {
+        return isFullyInitialized;
     }
 
     public Complex getCoefficient(int index) {
@@ -27,10 +33,15 @@ public class LinearEquation {
     }
 
     public void addCoefficient(Complex coefficient) {
-        if (currentCoefficient > numberOfUnknowns) {
+        if (isFullyInitialized) {
             throw new IllegalStateException("The equation has already all coefficients entered");
         }
+
         coefficients[currentCoefficient++] = coefficient;
+
+        if (currentCoefficient > numberOfUnknowns) {
+            isFullyInitialized = true;
+        }
     }
 
     public void addEquation(LinearEquation equation, Complex multiplier) {
