@@ -51,8 +51,8 @@ public class LinearEquationsSystem {
     }
 
     public void solve() {
-        if (numberOfEquations != currentEquation) {
-            throw new IllegalStateException("Equations system has not been entered correctly");
+        if (!isSystemFullyInitialized()) {
+            throw new IllegalStateException("Equations system is not initialized properly. Probably some equations or coefficients are missing.");
         }
 
         printEquationsSystem();
@@ -130,6 +130,20 @@ public class LinearEquationsSystem {
         }
 
         return getSingleSolution();
+    }
+
+    private boolean isSystemFullyInitialized() {
+        if (currentEquation != numberOfEquations) {
+            return false;
+        }
+
+        for (LinearEquation equation : equations) {
+            if (!equation.isFullyInitialized()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private int findNonZeroRow(int i) {
