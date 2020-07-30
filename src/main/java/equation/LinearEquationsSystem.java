@@ -7,7 +7,7 @@ import java.util.List;
 
 public class LinearEquationsSystem {
 
-    private enum State {
+    public enum State {
         UNSOLVED,
         NO_SOLUTIONS,
         SINGLE_SOLUTION,
@@ -30,6 +30,10 @@ public class LinearEquationsSystem {
         this.numberOfUnknowns = numberOfUnknowns;
         this.numberOfEquations = numberOfEquations;
         this.equations = new LinearEquation[numberOfEquations];
+    }
+
+    public State getState() {
+        return state;
     }
 
     public void addEquation(LinearEquation equation) {
