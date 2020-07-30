@@ -37,7 +37,7 @@ public class LinearEquationsSystemTest {
 
         // when
         system.solve();
-        double[] results = Arrays.stream(system.getSolution().split("\\s+"))
+        double[] results = Arrays.stream(system.getSolutionString().split("\\s+"))
                 .mapToDouble(Double::parseDouble)
                 .toArray();
 
@@ -80,7 +80,7 @@ public class LinearEquationsSystemTest {
         system.solve();
 
         // then
-        assertEquals("No solutions", system.getSolution());
+        assertEquals("No solutions", system.getSolutionString());
     }
 
     @Test
@@ -116,6 +116,6 @@ public class LinearEquationsSystemTest {
         system.solve();
 
         // then
-        assertEquals("Infinitely many solutions", system.getSolution());
+        assertEquals("Infinitely many solutions", system.getSolutionString());
     }
 }

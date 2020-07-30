@@ -21,7 +21,7 @@ public class Main {
         try {
             LinearEquationsSystem equationsSystem = readEquationsSystem(arguments.getInputFile());
             equationsSystem.solve();
-            writeSolution(arguments.getOutputFile(), equationsSystem.getSolution());
+            writeSolution(arguments.getOutputFile(), equationsSystem.getSolutionString());
         } catch (IOException e) {
             System.out.println("Error occurred when reading/writing file");
         }

@@ -122,7 +122,7 @@ public class LinearEquationsSystem {
         printEquationsSystem();
     }
 
-    public String getSolution() {
+    public String getSolutionString() {
         if (state == State.UNSOLVED) {
             throw new IllegalStateException("Equations system is unsolved");
         }
@@ -133,7 +133,7 @@ public class LinearEquationsSystem {
             return "Infinitely many solutions";
         }
 
-        return getSingleSolution();
+        return getSingleSolutionString();
     }
 
     private boolean isSystemFullyInitialized() {
@@ -217,7 +217,7 @@ public class LinearEquationsSystem {
         return false;
     }
 
-    private String getSingleSolution() {
+    private String getSingleSolutionString() {
         Complex[] solution = new Complex[numberOfUnknowns];
 
         for (int i = 0; i < numberOfUnknowns; i++) {
