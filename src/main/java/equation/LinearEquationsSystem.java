@@ -122,6 +122,28 @@ public class LinearEquationsSystem {
         printEquationsSystem();
     }
 
+    public Complex[] getSingleSolution() {
+        if (state != State.SINGLE_SOLUTION) {
+            throw new IllegalStateException("Equations system is in incorrect state: " + state);
+        }
+
+        Complex[] solution = new Complex[numberOfUnknowns];
+
+        for (int i = 0; i < numberOfUnknowns; i++) {
+            solution[i] = getEquation(i).getCoefficient(numberOfUnknowns);
+        }
+
+        if (!columnSwaps.isEmpty()) {
+            for (int i = columnSwaps.size() - 1; i >= 0; i--) {
+                ColumnSwap columnSwap = columnSwaps.get(i);
+                Complex temp = solution[columnSwap.a];
+                solution[columnSwap.a] = solution[columnSwap.b];
+                solution[columnSwap.b] = temp;
+            }
+        }
+        return solution;
+    }
+
     public String getSolutionString() {
         if (state == State.UNSOLVED) {
             throw new IllegalStateException("Equations system is unsolved");
@@ -218,20 +240,7 @@ public class LinearEquationsSystem {
     }
 
     private String getSingleSolutionString() {
-        Complex[] solution = new Complex[numberOfUnknowns];
-
-        for (int i = 0; i < numberOfUnknowns; i++) {
-            solution[i] = getEquation(i).getCoefficient(numberOfUnknowns);
-        }
-
-        if (!columnSwaps.isEmpty()) {
-            for (int i = columnSwaps.size() - 1; i >= 0; i--) {
-                ColumnSwap columnSwap = columnSwaps.get(i);
-                Complex temp = solution[columnSwap.a];
-                solution[columnSwap.a] = solution[columnSwap.b];
-                solution[columnSwap.b] = temp;
-            }
-        }
+        Complex[] solution = getSingleSolution();
 
         StringBuilder result = new StringBuilder();
         for (Complex variable : solution) {
